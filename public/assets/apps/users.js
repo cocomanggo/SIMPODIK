@@ -411,6 +411,8 @@ $('#nama').on('keyup', function(){
 $('#provinsi').on('change', function(){
     const input = document.querySelector("#provinsi");
     var value = document.getElementById( "provinsi" ).value;
+    var text = document.getElementById( "provinsiTxt" ).value;
+    $('#provinsiTxt').val(text);
 
     if ( value == 0) {
         input.classList.remove( "is-valid" );
@@ -424,6 +426,9 @@ $('#provinsi').on('change', function(){
 $('#kabkot').on('change', function(){
     const input = document.querySelector("#kabkot");
     var value = document.getElementById( "kabkot" ).value;
+    var text = document.getElementById( "kabkotTxt" ).value;
+    $('#kabkotTxt').val(text);
+
 
     if ( value == 0) {
         input.classList.remove( "is-valid" );
@@ -437,6 +442,8 @@ $('#kabkot').on('change', function(){
 $('#kecamatan').on('change', function(){
     const input = document.querySelector("#kecamatan");
     var value = document.getElementById( "kecamatan" ).value;
+    var text = document.getElementById( "kecamatanTxt" ).value;
+    $('#kecamatanTxt').val(text);
 
     if ( value == 0) {
         input.classList.remove( "is-valid" );
@@ -450,6 +457,8 @@ $('#kecamatan').on('change', function(){
 $('#keldes').on('change', function(){
     const input = document.querySelector("#keldes");
     var value = document.getElementById( "keldes" ).value;
+    var text = document.getElementById( "keldesTxt" ).value;
+    $('#keldesTxt').val(text);
 
     if ( value == 0) {
         input.classList.remove( "is-valid" );
