@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Yajra\DataTables\Facades\DataTables;
 
 class UsersController extends Controller
 {
@@ -47,11 +48,36 @@ class UsersController extends Controller
         return DB::table('pekerjaan')->get();
     }
 
+    public function getAllSiswa(){
+        $query = DB::table('siswa')->select('id', 'nik', 'nis', 'nama', 'jk', 'email', 'tlp_siswa', 'kelas');
+        return  DataTables::of($query)
+                ->addColumn('point', function($data){
+                    return '<strong> - </strong>';
+                })
+                ->addColumn('Aksi', function($data){
+                    return '<button type="button" class="btn btn-outline-primary" style="padding:15px 10px" onclick="viewDataSiswa('.$data->id.')">
+                    <i class="bx bx-user me-0"></i>
+                </button>
+
+
+    <button type="button" class="btn btn-outline-primary" style="padding:15px 10px" onclick="viewDataSiswa('.$data->id.')">
+                    <i class="bx bx-user me-0"></i>
+                </button>
+
+
+    <button type="button" class="btn btn-outline-primary" style="padding:15px 10px" onclick="viewDataSiswa('.$data->id.')">
+                    <i class="bx bx-user me-0"></i>
+                </button>';
+                })
+                ->rawColumns(['Aksi', 'point'])
+                ->make(true);
+    }
+
     public function saveNewSiswa(Request $request){
         // dd($request->nik);
        $this->validate($request, [
             'nik' => 'required|min_digits:16|max_digits:16|numeric|unique:siswa,nik',
-            'nis' => 'unique:siswa,nis',
+            // 'nis' => 'unique:siswa,nis',
             'nama' => 'required|max:255',
             'provinsi' => 'required|numeric',
             'kabkot' => 'required|numeric',
@@ -76,7 +102,7 @@ class UsersController extends Controller
             'nik.max_digits' => 'NIK harus :max angka',
             'nik.unique' => 'NIK sudah terdaftar',
             // 'nik.numeric' => 'NIK hanya angka',
-            'nis.unique' => 'NIS sudah terdaftar',
+            // 'nis.unique' => 'NIS sudah terdaftar',
             'nis.numeric' => 'NIS hanya angka',
             'nama.required' => 'Nama Lengkap harus terisi',
             'provinsi.required' => 'Harap pilih provinsi',
@@ -121,7 +147,9 @@ class UsersController extends Controller
             'penghasilan_ortu' => $request->penghasilan,
             'thn_msk' => $request->thnMsk,
             'sklh_asal' => $request->sklhAsal,
-            'email' => $request->emailSiswa
+            'email' => $request->emailSiswa,
+            'created_at' => date("Y-m-d h:i:s", time()),
+            'updated_at' => date("Y-m-d h:i:s", time()),
             // 'kelas'
             // 'subject'
        ];

@@ -1,11 +1,37 @@
+var table;
 $(document).ready(function() {
-    var table = $('#example2').DataTable({
-        lengthChange: false,
-        buttons: ['copy', 'excel', 'pdf', 'print']
+    // table = $('#example2').DataTable({
+    //     lengthChange: false,
+    //     buttons: ['copy', 'excel', 'pdf', 'print']
+    // });
+    tabel = $('#siswaTable').DataTable({
+        destroy: true,
+        order: [[2, 'desc']],
+        serverSide: true,
+        processing: true,
+        ajax: {
+            'url': '/api/getAllSiswa',
+        },
+        columns: [
+            // {Data: 'DT_RowIndex', name: 'DT_RowIndex', Width: '10px', orderable: false, searchable: false},
+            {data: 'nik', name: 'nik'},
+            {data: 'nis', name: 'nis'},
+            {data: 'nama', name: 'nama'},
+            {data: 'jk', name: 'jk'},
+            {data: 'email', name: 'email'},
+            {data: 'tlp_siswa', name: 'tlp_siswa'},
+            {data: 'kelas', name: 'kelas'},
+            {data: 'point', name: 'point'},
+            {data: 'Aksi', name: 'Aksi', orderable: false, searchable: false},
+        ],
+        // columnDefs: [
+        //     // {className: "dt-head-center", target: [0,1,2,3,4,5,6,7]},
+        //     // {className: "dt-body-center", target: [4,5]}
+        // ]
     });
 
-    table.buttons().container()
-        .appendTo('#example2_wrapper .col-md-6:eq(0)');
+    // table.buttons().container()
+    //     .appendTo('#example2_wrapper .col-md-6:eq(0)');
 
     $('#provinsi').append('<option value="">Pilih Provinsi</option>');
     $('#kabkot').append('<option value="">Pilih Kab / Kota</option>');
@@ -119,6 +145,8 @@ $('#kecamatan').on('change', function() {
 // END SELECT 2 BOOTSRAP 4
 
 // AJAX
+
+
 function get_data_kecamatan(id){
     // console.log(id);
     $.ajax({
@@ -260,6 +288,7 @@ $('#tambahSiswaModal').on('hidden.bs.modal', function (e) {
 
 
 $('#saveDataSiswa').on('click', function(){
+    $.LoadingOverlay("show");
     $.ajaxSetup({
         headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -272,6 +301,12 @@ $('#saveDataSiswa').on('click', function(){
         data: $("#addSiswaForm").serialize(),
         dataType: 'JSON',
         success: function(res){
+            table.ajax.reload();
+            $('#tambahSiswaModal').modal('hide');
+            $.LoadingOverlay("hide");
+
+
+
             toastr["success"]("Data siswa telah disimpan");
             toastr.options = {
               "closeButton": false,
@@ -292,6 +327,7 @@ $('#saveDataSiswa').on('click', function(){
             }
         },
         error: function(xhr){
+            $.LoadingOverlay("hide");
             var res = xhr.responseJSON;
             // console.log(res.errors);
 
@@ -411,8 +447,9 @@ $('#nama').on('keyup', function(){
 $('#provinsi').on('change', function(){
     const input = document.querySelector("#provinsi");
     var value = document.getElementById( "provinsi" ).value;
-    var text = document.getElementById( "provinsiTxt" ).value;
-    $('#provinsiTxt').val(text);
+    var text = $('#provinsi').select2('data');
+    // alert(text[0].text+ ' ' +value);
+    $('#provinsiTxt').val(text[0].text);
 
     if ( value == 0) {
         input.classList.remove( "is-valid" );
@@ -426,8 +463,8 @@ $('#provinsi').on('change', function(){
 $('#kabkot').on('change', function(){
     const input = document.querySelector("#kabkot");
     var value = document.getElementById( "kabkot" ).value;
-    var text = document.getElementById( "kabkotTxt" ).value;
-    $('#kabkotTxt').val(text);
+    var text = $('#kabkot').select2('data');
+    $('#kabkotTxt').val(text[0].text);
 
 
     if ( value == 0) {
@@ -442,8 +479,8 @@ $('#kabkot').on('change', function(){
 $('#kecamatan').on('change', function(){
     const input = document.querySelector("#kecamatan");
     var value = document.getElementById( "kecamatan" ).value;
-    var text = document.getElementById( "kecamatanTxt" ).value;
-    $('#kecamatanTxt').val(text);
+    var text = $('#kecamatan').select2('data');
+    $('#kecamatanTxt').val(text[0].text);
 
     if ( value == 0) {
         input.classList.remove( "is-valid" );
@@ -457,8 +494,8 @@ $('#kecamatan').on('change', function(){
 $('#keldes').on('change', function(){
     const input = document.querySelector("#keldes");
     var value = document.getElementById( "keldes" ).value;
-    var text = document.getElementById( "keldesTxt" ).value;
-    $('#keldesTxt').val(text);
+    var text = $('#keldes').select2('data');
+    $('#keldesTxt').val(text[0].text);
 
     if ( value == 0) {
         input.classList.remove( "is-valid" );
@@ -602,6 +639,19 @@ $('#tlpWali').on('keyup', function(){
 $('#thnMsk').on('keyup', function(){
     const input = document.querySelector("#thnMsk");
     var value = document.getElementById( "thnMsk" ).value;
+
+    if ( value == ''  || value.length < 3 ) {
+        input.classList.remove( "is-valid" );
+        input.classList.add( "is-invalid" );
+    } else {
+        input.classList.add( "is-valid" );
+        input.classList.remove( "is-invalid" );
+    }
+});
+
+$('#tlpSiswa').on('keyup', function(){
+    const input = document.querySelector("#tlpSiswa");
+    var value = document.getElementById( "tlpSiswa" ).value;
 
     if ( value == ''  || value.length < 3 ) {
         input.classList.remove( "is-valid" );

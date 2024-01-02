@@ -27,5 +27,6 @@ Route::get('/api/get_keldes/{id}', [UsersController::class, 'get_keldes']);
 Route::get('/api/get_penghasilan', [UsersController::class, 'get_penghasilan']);
 Route::get('/api/get_pekerjaan', [UsersController::class, 'get_pekerjaan']);
 Route::post('/api/saveNewSiswa', [UsersController::class, 'saveNewSiswa']);
+Route::get('/api/getAllSiswa', [UsersController::class, 'getAllSiswa']);
 
 
